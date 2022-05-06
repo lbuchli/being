@@ -425,10 +425,11 @@ class Mclm3002(Controller):
             **kwargs,
         )
 
-    def init_homing(self, **homingKwargs):
+    def init_homing(self, minWidth=None, **homingKwargs):
         method = default_homing_method(**homingKwargs)
         if method in self.HARD_STOP_HOMING:
-            minWidth = self.position_si_2_device * self.length
+            if not minWidth:
+                minWidth = self.position_si_2_device * self.length
             currentLimit = self.settings['Current Control Parameter Set/Continuous Current Limit']
             self.homing = CrudeHoming(self.node, minWidth, homingMethod=method,
                                       homeOffset=self.homeOffset,
